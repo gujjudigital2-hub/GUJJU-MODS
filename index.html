@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUJJU MODS VIP</title>
+
+    <style>
+        /* Background animation */
+        @keyframes bg-flow {
+            0% { background: #0f172a; }
+            50% { background: #1e1b4b; }
+            100% { background: #0f172a; }
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            animation: bg-flow 10s infinite;
+            color: white;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid #00f2ff;
+            padding: 40px;
+            border-radius: 40px;
+            width: 310px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
+        }
+
+        #landingPage, #generatorPage, #deniedPage {
+            display: none;
+        }
+
+        h1 {
+            font-size: 20px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        .btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            border-radius: 15px;
+            width: 100%;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .btn-tg {
+            background: #0088cc;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            display: block;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        #keyDisplay {
+            border: 1px dashed #00f2ff;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #00f2ff;
+            font-weight: bold;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Landing Page -->
+<div id="landingPage" class="container">
+    <h1>GUJJU MODS VIP</h1>
+    <p style="font-size: 13px; color: #ccc;">
+        Complete the advertisement to get your VIP access key.
+    </p>
+    <a href="https://linksgo.in/3i6m" class="btn">GET VIP KEY NOW</a>
+    <p style="font-size: 10px; color: #888;">© GUJJU MODS SECURITY</p>
+</div>
+
+<!-- Generator Page -->
+<div id="generatorPage" class="container">
+    <h1>KEY GENERATOR</h1>
+    <div id="keyDisplay">VERIFIED ACCESS</div>
+    <button id="genBtn" class="btn" onclick="generateKey()">GENERATE NEW KEY</button>
+    <button id="copyBtn" class="btn" style="display:none; background:#00ff00;" onclick="copyKey()">COPY KEY</button>
+    <a href="https://t.me/+7WucfrS0eT4zYjA1" class="btn-tg">JOIN MAIN CHANNEL</a>
+    <a href="https://t.me/Ashadul_AD" class="btn-tg" style="background:#24292e;">CONTACT ADMIN</a>
+</div>
+
+<!-- Access Denied Page -->
+<div id="deniedPage" class="container">
+    <h1 style="color:#ff3366;">ACCESS DENIED</h1>
+    <p>Direct access to this page is not allowed.</p>
+    <button class="btn" onclick="goHome()">GO TO HOME</button>
+</div>
+
+<script>
+    // Page control logic
+    window.onload = function () {
+        const referrer = document.referrer;
+        const landing = document.getElementById('landingPage');
+        const generator = document.getElementById('generatorPage');
+        const denied = document.getElementById('deniedPage');
+
+        if (referrer.includes("linksgo.in")) {
+            generator.style.display = 'block';
+        } else {
+            landing.style.display = 'block';
+        }
+    };
+
+    function goHome() {
+        location.reload();
+    }
+
+    // Airtable configuration
+    const AIRTABLE_TOKEN = "YOUR_AIRTABLE_TOKEN";
+    const BASE_ID = "YOUR_BASE_ID";
+    const TABLE_ID = "YOUR_TABLE_ID";
+
+    async function generateKey() {
+        const genBtn = document.getElementById('genBtn');
+        const display = document.getElementById('keyDisplay');
+
+        genBtn.disabled = true;
+        genBtn.innerText = "PROCESSING...";
+
+        const newKey = "GUJJU-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        try {
+            const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + AIRTABLE_TOKEN,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fields: { Password: newKey }
+                })
+            });
+
+            if (response.ok) {
+                display.innerText = newKey;
+                genBtn.style.display = 'none';
+                document.getElementById('copyBtn').style.display = 'block';
+            } else {
+                alert("Airtable error. Check table configuration.");
+                resetButton();
+            }
+        } catch (error) {
+            alert("Server error. Please try again.");
+            resetButton();
+        }
+    }
+
+    function resetButton() {
+        const genBtn = document.getElementById('genBtn');
+        genBtn.disabled = false;
+        genBtn.innerText = "GENERATE NEW KEY";
+    }
+
+    function copyKey() {
+        navigator.clipboard.writeText(document.getElementById('keyDisplay').innerText);
+        alert("VIP key copied successfully!");
+    }
+</script>
+
+</body>
+</html>
